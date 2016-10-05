@@ -1,0 +1,7 @@
+.librarian
+.Puppetfile.lock
+.vagrant/
+puppet.conf.*
+keyrings/*.gpg
+keyrings/*.gpg~
+keyrings/random_seed

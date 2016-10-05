@@ -1,0 +1,5 @@
+:cachedir: /var/puppet/r10k/cache'
+:sources:
+  :local:
+    :basedir: /etc/puppet/environments
+    :remote: /etc/puppet
