@@ -94,6 +94,36 @@ puppet apply --hiera_config=./hiera.yaml  --modulepath=./modules:./modules-exter
 - If you don't use `r10k` you can `librarian-puppet install --path /etc/puppet/modules-external/`
 - `puppet resource package` Show installed packages
 
+### Overriding Configs
+One issue I ran into was a community module I was using defined a file that I wanted to overwrite.
+Since I couldn't redefine the file, I needed a way to adjust the content. You have to the *careful
+because with the examples you overwrite all previous adjustments.
+
+**Same module**  
+```puppet
+# For changing definitions in same module
+file {'module.conf':
+  ensure => file,
+}
+
+# ... I can adjust properties later
+File['module.conf'] {
+  owner => 'www-data',
+}
+```
+
+**Separate module**  
+```puppet
+# For changing definitions in another module
+include othermodule
+
+File <| title == "module.conf" |> {
+  content => template('mymodule/setenv.sh.erb'),
+}
+```
+- https://docs.puppet.com/puppet/2.7/lang_resources.html#amending-attributes-with-a-collector
+- https://serverfault.com/questions/438658/how-to-extend-a-file-definition-from-an-existing-module-in-the-node
+
 ## Modules
 Modules encapulate functionality & definitions of resources for specific installations and/or configurations. For example, `puppetlabs/mysql` includes everything you need to install mysql, configure, add users, create databases, etc.
 
@@ -227,6 +257,12 @@ Misc. links and hiera and/or masterless puppet.
 - http://garylarizza.com/blog/2014/02/17/puppet-workflow-part-2/
 - https://puppet.com/resources
 - https://mestachs.wordpress.com/tag/puppet/
+
+##### Tools
+Tools that make your puppeteer life better!
+- https://github.com/mschuchard/puppet-check
+- https://github.com/binford2k/hiera_explain
+- http://puppet-lint.com/
 
 ##### Masterless
 - https://www.digitalocean.com/community/tutorials/how-to-install-puppet-in-standalone-mode-on-centos-7
